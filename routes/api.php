@@ -21,11 +21,16 @@ use Illuminate\Support\Facades\Route;
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 }); */
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
+//Route::post('/register', [AuthController::class, 'register']);
 // Rutas protegidas por autenticación Sanctum
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'me']);
+    
+    // Solo los planificadores pueden acceder a estas rutas
+    Route::middleware('check.planificador')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+    });
 });
 /* Route::middleware('auth:sanctum')->get('/v1/me', function (Request $request) {
     return $request->user();

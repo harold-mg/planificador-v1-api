@@ -18,7 +18,7 @@ class AuthController extends Controller
             'apellido' => 'required|string|max:255',
             'cedula_identidad' => 'required|string|max:255|unique:usuarios',
             'nombre_usuario' => 'required|string|max:255|unique:usuarios',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',  // Confirmar que las contraseñas coincidan
             'rol' => 'required|string|in:responsable_area,responsable_unidad,planificador',
         ]);
 

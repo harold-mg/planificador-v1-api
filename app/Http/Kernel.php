@@ -13,6 +13,10 @@ class Kernel extends HttpKernel
      *
      * @var array<int, class-string|string>
      */
+    protected $routeMiddleware = [
+        // Otros middlewares...
+        'check.planificador' => \App\Http\Middleware\CheckPlanificador::class, // Añadir este middleware
+    ];
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
