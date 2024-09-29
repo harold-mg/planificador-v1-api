@@ -20,6 +20,8 @@ class AuthController extends Controller
             'nombre_usuario' => 'required|string|max:255|unique:usuarios',
             'password' => 'required|string|min:6|confirmed',  // Confirmar que las contraseñas coincidan
             'rol' => 'required|string|in:responsable_area,responsable_unidad,planificador',
+            'area_id' => 'nullable|exists:areas,id',
+            'unidad_id' => 'nullable|exists:unidades,id',
         ]);
 
         $usuario = Usuario::create([
@@ -30,6 +32,8 @@ class AuthController extends Controller
             'password' => Hash::make($validatedData['password']),
             'rol' => $validatedData['rol'], // Usar el rol especificado en la solicitud
             //'rol' => 'responsable_area', // Por defecto, asignar un rol (ajusta según tus necesidades)
+            'area_id' => $validatedData['area_id'],
+            'unidad_id' => $validatedData['unidad_id'],
         ]);
 
         // Crear un token para el usuario

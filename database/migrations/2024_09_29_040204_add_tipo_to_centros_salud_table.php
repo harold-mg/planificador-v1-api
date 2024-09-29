@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('unidades', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre')->unique();
-            $table->timestamps();
+        Schema::table('centros_salud', function (Blueprint $table) {
+            $table->string('tipo')->after('municipio_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('unidades');
+        Schema::table('centros_salud', function (Blueprint $table) {
+            $table->dropColumn('tipo');
+        });
     }
+
 };

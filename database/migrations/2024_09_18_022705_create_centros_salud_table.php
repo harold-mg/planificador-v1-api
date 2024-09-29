@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('centros_salud', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->string('tipo');
             $table->foreignId('municipio_id')->constrained('municipios')->onDelete('cascade');
             $table->timestamps();
         });

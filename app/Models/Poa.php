@@ -13,6 +13,7 @@ class Poa extends Model
         'codigo_poa',
         'operacion',
         'area_id',
+        'unidad_id',
     ];
 
     // Relación con ActividadesConVehiculo
@@ -27,11 +28,15 @@ class Poa extends Model
         return $this->belongsTo(Area::class);
     }
 
-    // Acceso a Unidad a través de Area
     public function unidad()
     {
-        return $this->area->unidad();
+        return $this->belongsTo(Unidad::class);
     }
+    // Acceso a Unidad a través de Area
+    /* public function unidad()
+    {
+        return $this->area->unidad();
+    } */
     /* // Relación con Unidad
     public function unidad()
     {

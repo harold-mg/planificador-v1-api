@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('password'); // La contraseña se almacenará con hash
             $table->string('telefono')->nullable();
             $table->enum('rol', ['responsable_area', 'responsable_unidad', 'planificador']);
-            $table->foreignId('area_id')->nullable()->constrained('areas')->onDelete('set null');
-            //$table->foreignId('unidad_id')->nullable()->constrained('unidades')->onDelete('set null');
+            $table->foreignId('area_id')->nullable()->constrained('areas');
+            $table->foreignId('unidad_id')->nullable()->constrained('unidades');
             $table->timestamps();
         });
     }

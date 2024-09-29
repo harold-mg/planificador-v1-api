@@ -27,6 +27,12 @@ return new class extends Migration
             $table->enum('estado_aprobacion', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente');
             $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
             $table->foreignId('vehiculo_id')->constrained('vehiculos')->onDelete('cascade'); // Relación con vehículo
+            
+            /* $table->unsignedBigInteger('usuario_id');
+            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->unsignedBigInteger('vehiculo_id');
+            $table->foreign('vehiculo_id')->references('id')->on('vehiculos')->onDelete('cascade'); */
+
             $table->timestamps();
         });
     }

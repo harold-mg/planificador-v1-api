@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class CentroSalud extends Model
 {
     use HasFactory;
-
+    protected $table = 'centros_salud';
     protected $fillable = [
-        'nombre', 
-        'municipio_id'
+        'nombre',
+        'tipo',
+        'municipio_id',
     ];
 
     // Relación con Municipio

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->foreignId('coordinacion_id')->constrained('coordinaciones')->onDelete('cascade');
+            /* $table->unsignedBigInteger('coordinacion_id');
+            $table->foreign('coordinacion_id')->references('id')->on('coordinaciones')->onDelete('cascade'); */
             $table->timestamps();
         });
     }

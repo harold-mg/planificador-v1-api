@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Coordinacion extends Model
 {
     use HasFactory;
-
+    protected $table = 'coordinaciones';
     protected $fillable = ['nombre'];
 
     // Relación con Municipios

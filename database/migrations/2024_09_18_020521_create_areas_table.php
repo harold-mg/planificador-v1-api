@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->string('nombre')->unique(); // Nombre único para evitar duplicados
             $table->foreignId('unidad_id')->constrained('unidades')->onDelete('cascade');
+            /* $table->unsignedBigInteger('unidad_id');
+            $table->foreign('unidad_id')->references('id')->on('unidades')->onDelete('cascade'); */
+
             $table->timestamps();
         });
     }

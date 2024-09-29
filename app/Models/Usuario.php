@@ -19,7 +19,8 @@ class Usuario extends Authenticatable
         'password',
         'telefono',
         'rol',
-        'area_id'
+        'area_id',
+        'unidad_id'
     ];
     
     // Relación con ActividadesConVehiculo
@@ -32,11 +33,26 @@ class Usuario extends Authenticatable
     {
         return $this->belongsTo(Area::class);
     }
+    // Relación directa con Unidad
+    public function unidad()
+    {
+        return $this->belongsTo(Unidad::class);
+    }
+    // Método que devuelve la entidad (area o unidad) a la que pertenece el usuario
+    public function entidad()
+    {
+        if ($this->area) {
+            return $this->area;
+        } elseif ($this->unidad) {
+            return $this->unidad;
+        }
+        return null; // Si no tiene ni área ni unidad
+    }
 
-    // Acceso a Unidad a través de Area
+    /* // Acceso a Unidad a través de Area
     public function unidad()
     {
         return $this->area->unidad();
-    }
+    } */
 }
 
