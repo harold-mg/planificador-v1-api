@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('poas', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo_poa');//->unique();
-            $table->string('operacion');
+            $table->string('codigo_poa')->unique();
+            //$table->string('operacion');
             $table->foreignId('area_id')->nullable()->constrained('areas')->onDelete('cascade'); // Permitir null en area_id
-        $table->foreignId('unidad_id')->constrained('unidades')->onDelete('cascade'); // unidad_id sigue siendo obligatorio
+            $table->foreignId('unidad_id')->constrained('unidades')->onDelete('cascade'); // unidad_id sigue siendo obligatorio
             $table->timestamps();
         });
     }

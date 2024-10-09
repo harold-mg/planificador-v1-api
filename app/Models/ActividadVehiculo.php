@@ -8,17 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class ActividadVehiculo extends Model
 {
     use HasFactory;
-
+    protected $table = 'actividades_vehiculo';
     protected $fillable = [
         'poa_id',
-        'resultado_esperado',
+        'detalle_operacion',
+        'resultados_esperados',
         'fecha_inicio',
         'fecha_fin',
         'centro_salud_id', // Mantener solo la relación con CentroSalud
-        'tecnico_id',
-        'detalles',
+        'tecnico_a_cargo',
+        'detalles_adicionales',
         'estado_aprobacion',
         'usuario_id',
+        'vehiculo_id',
     ];
 
     // Relación con Poa
@@ -26,18 +28,6 @@ class ActividadVehiculo extends Model
     {
         return $this->belongsTo(Poa::class);
     }
-
-/*     // Relación con Coordinacion
-    public function coordinacion()
-    {
-        return $this->belongsTo(Coordinacion::class);
-    }
-
-    // Relación con Municipio
-    public function municipio()
-    {
-        return $this->belongsTo(Municipio::class);
-    } */
 
     // Relación con CentroSalud
     public function centroSalud()

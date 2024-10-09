@@ -45,6 +45,11 @@ return [
             'provider' => 'users',
         ],
     ],
+/*     'api' => [
+        'driver' => 'token', // o 'passport' si estás usando Laravel Passport
+        'provider' => 'users',
+        'hash' => false,
+    ], */
 
     /*
     |--------------------------------------------------------------------------

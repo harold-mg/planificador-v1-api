@@ -11,11 +11,15 @@ class Poa extends Model
 
     protected $fillable = [
         'codigo_poa',
-        'operacion',
+        //'operacion',
         'area_id',
         'unidad_id',
     ];
-
+    // Relación con operaciones
+    public function operaciones()
+    {
+        return $this->hasMany(Operacion::class);
+    }
     // Relación con ActividadesConVehiculo
     public function actividadesConVehiculo()
     {
@@ -32,6 +36,12 @@ class Poa extends Model
     {
         return $this->belongsTo(Unidad::class);
     }
+
+    // Si "operacion" es una columna de texto o JSON que guarda las operaciones
+/*     public function getOperacionAttribute($value)
+    {
+        return json_decode($value);  // Decodifica si está guardado como JSON
+    } */
     // Acceso a Unidad a través de Area
     /* public function unidad()
     {

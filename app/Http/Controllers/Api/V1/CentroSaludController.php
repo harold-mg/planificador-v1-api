@@ -65,4 +65,10 @@ class CentroSaludController extends Controller
         $municipios = Municipio::where('coordinacion_id', $coordinacionId)->get();
         return response()->json($municipios);
     }
+    // Método para obtener los centros de salud por municipio
+    public function getCentrosSaludByMunicipio($municipioId)
+    {
+        $centrosSalud = CentroSalud::where('municipio_id', $municipioId)->get(); // Filtra los centros de salud por municipio
+        return response()->json($centrosSalud);
+    }
 }

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('actividades_vehiculo', function (Blueprint $table) {
             $table->id();
-            $table->enum('tipo_actividad', ['con_vehiculo', 'sin_vehiculo']);
+            //$table->enum('tipo_actividad', ['con_vehiculo', 'sin_vehiculo']);
             $table->foreignId('poa_id')->constrained('poas')->onDelete('cascade');
-            $table->text('detalle_operacion');
+            $table->text('detalle_operacion')->nullable();
             $table->text('resultados_esperados');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text('detalles_adicionales')->nullable();
             $table->enum('estado_aprobacion', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente');
             $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
-            $table->foreignId('vehiculo_id')->constrained('vehiculos')->onDelete('cascade'); // Relación con vehículo
+            $table->foreignId('vehiculo_id')->nullable()->constrained('vehiculos')->onDelete('cascade'); // Relación con vehículo
             
             /* $table->unsignedBigInteger('usuario_id');
             $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
@@ -42,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actividad_vehiculos');
+        Schema::dropIfExists('actividades_vehiculo');
     }
 };

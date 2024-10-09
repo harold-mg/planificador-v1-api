@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Vehiculo extends Model
 {
     use HasFactory;
-
+    protected $table = 'vehiculos';
+    
     protected $fillable = [
         'placa',
         'modelo',
@@ -19,5 +20,10 @@ class Vehiculo extends Model
     public function actividadVehiculo()
     {
         return $this->hasMany(ActividadVehiculo::class);
+    }
+    // Scope para obtener solo los vehículos disponibles
+    public function scopeDisponibles($query)
+    {
+        return $query->where('disponible', true);
     }
 }
