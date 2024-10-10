@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Poa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PoaController extends Controller
 {
@@ -87,6 +88,44 @@ class PoaController extends Controller
             return response()->json(['error' => 'POA no encontrado'], 404);
         }
     }
+    public function getPoas()
+    {
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+    
+        // Condicionales según el rol del usuario
+        if ($user->rol == 'responsable_area') {
+            // Filtrar POAs solo por el área del usuario
+            $poas = POA::where('area_id', $user->area_id)->get();
+        } elseif ($user->rol == 'responsable_unidad') {
+            // Filtrar POAs solo por la unidad del usuario y donde area_id sea null
+            $poas = POA::where('unidad_id', $user->unidad_id)
+                       ->whereNull('area_id') // Solo los POAs sin área asignada
+                       ->get();
+        } elseif ($user->rol == 'planificador') {
+            // Mostrar todos los POAs
+            $poas = POA::all();
+        } else {
+            // Si el rol no coincide, retornar un array vacío
+            $poas = [];
+        }
+    
+        // Retornar los POAs como JSON
+        return response()->json($poas);
+    }
+/*     public function getPoas()
+    {
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+    
+        // Obtener los POAs filtrados por área o unidad
+        $poas = POA::where('area_id', $user->area_id)
+                   ->orWhere('unidad_id', $user->unidad_id)
+                   ->get();
+    
+        return response()->json($poas);
+    } */
+    
 /*     public function getOperacionesByPoa($codigo_poa)
     {
         // Buscar el POA por su código

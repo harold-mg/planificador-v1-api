@@ -91,7 +91,7 @@ Route::get('/coordinaciones', [CoordinacionController::class, 'index']);
 Route::apiResource('municipios', MunicipioController::class);
 
 //POAS
-Route::apiResource('poas', PoaController::class);
+//Route::apiResource('poas', PoaController::class);
 Route::get('unidades/{unidad_id}/areas', [UnidadController::class, 'getAreasByUnidad']);
 Route::get('/poas/{codigo_poa}/operaciones', [PoaController::class, 'getOperacionesByCodigo']);    
 Route::get('/poas/{codigo_poa}/operaciones', [PoaController::class, 'getOperaciones']);
@@ -101,3 +101,7 @@ Route::get('/poas/{codigo_poa}/operaciones', [PoaController::class, 'getOperacio
 Route::apiResource('operaciones', OperacionController::class);
 Route::post('/operaciones', [OperacionController::class, 'store']);
 
+Route::middleware('auth:sanctum')->group(function() {
+    // Ruta para obtener los POAs filtrados por el área o unidad del usuario autenticado
+    Route::get('/poas', [PoaController::class, 'getPoas']);
+});
