@@ -12,10 +12,16 @@ use App\Models\CentroSalud; // Si tienes una tabla para los centros de salud
 use App\Models\Coordinacion;
 use App\Models\Municipio;
 
+
 class ActividadVehiculoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');  // Asegúrate de que este middleware esté aplicado
+    }
     public function store(Request $request)
     {
+
         // Validar los datos recibidos
         $validated = $request->validate([
             'poa_id' => 'required|exists:poas,id',
@@ -29,14 +35,18 @@ class ActividadVehiculoController extends Controller
             //'estado_aprobacion' => 'required|string',
             'usuario_id' => 'required|exists:usuarios,id', // Esta línea se puede omitir
         ]);
-            // Crea la actividad y asigna el user_id automáticamente
-            //$actividad = ActividadVehiculo::create($request->except('usuario_id'));
-            // Verificar si el usuario está autenticado
-/*         $userId = auth()->id();
-        if (!$userId) {
-            return response()->json(['message' => 'Usuario no autenticado.'], 401);
-        } */
-    
+        // Determinar el nivel de aprobación en función del rol del usuario
+        // Supongamos que el request trae el rol del usuario autenticado
+        $usuario = auth()->user(); // Obtiene el usuario autenticado
+        if (!$usuario) {
+            return response()->json(['error' => 'Usuario no autenticado'], 401); // Retorna error si no está autenticado
+        }
+        $nivel_aprobacion = 'unidad'; // Por defecto, actividades creadas por responsables de área necesitan revisión de unidad
+        
+        if ($usuario->rol == 'responsable_unidad') {
+            // Si el usuario es Responsable de Unidad, su actividad pasa directamente al planificador
+            $nivel_aprobacion = 'planificador';
+        }
         // Crear la actividad con vehículo
         $actividad = ActividadVehiculo::create([
             'poa_id' => $validated['poa_id'],
@@ -49,6 +59,8 @@ class ActividadVehiculoController extends Controller
             'detalles_adicionales' => $validated['detalles_adicionales'],
             //'usuario_id' => auth()->id(), // ID del usuario autenticado
             'estado_aprobacion' => 'pendiente', // Estado inicial de la actividad
+            'nivel_aprobacion' => $nivel_aprobacion,
+            //'nivel_aprobacion' => 'unidad',
             //'usuario_id' => $request->usuario_id,
             'usuario_id' => $validated['usuario_id'], // Se obtiene del request validado
         ]);
@@ -151,5 +163,64 @@ class ActividadVehiculoController extends Controller
     
         return response()->json(['success' => true]);
     }
+
+    // Método para aprobar actividad por parte del responsable de unidad
+    public function aprobarPorUnidad($id)
+    {
+        $actividad = ActividadVehiculo::findOrFail($id);
+        
+        // Verificar que el usuario tenga el rol correcto para aprobar
+        if (auth()->user()->rol !== 'responsable_unidad') {
+            return response()->json(['error' => 'No tienes permisos para aprobar esta actividad'], 403);
+        }
+
+        // Verificar que la actividad esté en el nivel correcto de aprobación
+        if ($actividad->nivel_aprobacion === 'unidad') {
+            $actividad->nivel_aprobacion = 'planificador'; // Cambiar al siguiente nivel de aprobación
+            $actividad->save();
+            
+            return response()->json(['message' => 'Actividad aprobada por la unidad y enviada al planificador']);
+        }
+
+        return response()->json(['message' => 'No se puede aprobar esta actividad'], 400);
+    }
+
+    // Método para aprobar actividad por parte del planificador
+    public function aprobarPorPlanificador($id)
+    {
+        $actividad = ActividadVehiculo::findOrFail($id);
+        
+        // Verificar que el usuario tenga el rol correcto para aprobar
+        if (auth()->user()->rol !== 'planificador') {
+            return response()->json(['error' => 'No tienes permisos para aprobar esta actividad'], 403);
+        }
+
+        // Verificar que la actividad esté en el nivel correcto de aprobación
+        if ($actividad->nivel_aprobacion === 'planificador') {
+            $actividad->estado_aprobacion = 'aprobado'; // Cambiar el estado a aprobado
+            $actividad->save();
+            
+            return response()->json(['message' => 'Actividad aprobada por el planificador']);
+        }
+
+        return response()->json(['message' => 'No se puede aprobar esta actividad'], 400);
+    }
+
+    // Método para rechazar actividad
+    public function rechazar($id)
+    {
+        $actividad = ActividadVehiculo::findOrFail($id);
+        
+        // Verificar que el usuario tenga el rol correcto para rechazar
+        if (auth()->user()->rol !== 'responsable_unidad' && auth()->user()->rol !== 'planificador') {
+            return response()->json(['error' => 'No tienes permisos para rechazar esta actividad'], 403);
+        }
+
+        $actividad->estado_aprobacion = 'rechazado'; // Cambiar el estado a rechazado
+        $actividad->save();
+
+        return response()->json(['message' => 'Actividad rechazada']);
+    }
+
     
 }

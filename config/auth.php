@@ -44,7 +44,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        
     ],
+/*     'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+            'hash' => false,
+        ], */
 /*     'api' => [
         'driver' => 'token', // o 'passport' si estás usando Laravel Passport
         'provider' => 'users',

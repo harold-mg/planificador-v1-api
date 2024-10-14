@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('tecnico_a_cargo');
             $table->text('detalles_adicionales')->nullable();
             $table->enum('estado_aprobacion', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente');
+            $table->enum('nivel_aprobacion', ['unidad', 'planificador'])->default('unidad');
             $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
             $table->foreignId('vehiculo_id')->nullable()->constrained('vehiculos')->onDelete('cascade'); // Relación con vehículo
             

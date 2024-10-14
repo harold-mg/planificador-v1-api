@@ -19,6 +19,7 @@ class ActividadVehiculo extends Model
         'tecnico_a_cargo',
         'detalles_adicionales',
         'estado_aprobacion',
+        'nivel_aprobacion',
         'usuario_id',
         'vehiculo_id',
     ];

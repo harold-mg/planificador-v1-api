@@ -39,4 +39,32 @@ class AreaController extends Controller
         $areas = Area::where('unidad_id', $unidadId)->get();
         return response()->json($areas);
     }
+    // Método para actualizar un área
+    public function update(Request $request, $id)
+    {
+        $area = Area::findOrFail($id);
+
+        // Validar los datos de entrada
+        $validated = $request->validate([
+            'nombre' => 'required|unique:areas,nombre,' . $area->id . '|max:255', // El nombre debe ser único excepto para esta área
+        ]);
+
+        // Actualizar el área con los datos validados
+        $area->update([
+            'nombre' => $validated['nombre'],
+        ]);
+
+        return response()->json(['message' => 'Área actualizada correctamente']);
+    }
+
+    // Método para eliminar un área
+    public function destroy($id)
+    {
+        $area = Area::findOrFail($id);
+
+        // Eliminar el área
+        $area->delete();
+
+        return response()->json(['message' => 'Área eliminada correctamente']);
+    }
 }
