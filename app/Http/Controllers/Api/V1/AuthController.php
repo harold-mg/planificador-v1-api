@@ -64,12 +64,13 @@ class AuthController extends Controller
     }
 
     // Método para cerrar sesión
-    public function logout()
-    {
-        Auth::user()->tokens()->delete();
-
-        return response()->json(['message' => 'Sesión cerrada correctamente']);
+    public function logout(Request $request) {
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+    
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
+    
 
     // Método para obtener el usuario autenticado
     public function me()

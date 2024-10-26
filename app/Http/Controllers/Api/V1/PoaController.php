@@ -113,6 +113,18 @@ class PoaController extends Controller
         // Retornar los POAs como JSON
         return response()->json($poas);
     }
+    public function getPoasByUnidad($unidad_id)
+    {
+        // Filtra POAs donde la unidad o el área están relacionadas con la unidad proporcionada
+        $poas = Poa::where('unidad_id', $unidad_id)
+                   ->orWhereHas('area', function ($query) use ($unidad_id) {
+                       $query->where('unidad_id', $unidad_id);
+                   })
+                   ->with(['area', 'unidad']) // Incluir relaciones de área y unidad
+                   ->get();
+    
+        return response()->json($poas);
+    }
 /*     public function getPoas()
     {
         // Obtener el usuario autenticado

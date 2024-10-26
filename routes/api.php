@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\OperacionController;
 use App\Http\Controllers\Api\V1\PoaController;
 use App\Http\Controllers\Api\V1\UnidadController;
 use App\Http\Controllers\Api\V1\VehiculoController;
+use App\Models\ActividadVehiculo;
 use App\Models\Municipio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
 
     Route::post('/actividad_vehiculo', [ActividadVehiculoController::class, 'store']);
-    Route::get('/actividad_vehiculos', [ActividadVehiculoController::class, 'index']);
+    Route::get('/actividad_vehiculo', [ActividadVehiculoController::class, 'index']);
     Route::get('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'show']);
     Route::put('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'update']);
     Route::delete('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'destroy']);
@@ -92,10 +93,12 @@ Route::middleware('auth:sanctum')->group(function () {
     //ACTIVIDAD VEHICULO
     // Actividades de vehículos - CRUD básico
     Route::apiResource('actividad_vehiculos', ActividadVehiculoController::class);
-    Route::post('/actividades-vehiculo/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
-    Route::post('/actividades-vehiculo/{id}/aprobar-unidad', [ActividadVehiculoController::class, 'aprobarPorUnidad']);
-    Route::post('/actividades-vehiculo/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
+    Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
+    Route::post('/actividad_vehiculos/{id}/aprobar-unidad', [ActividadVehiculoController::class, 'aprobarPorUnidad']);
+    Route::post('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
     Route::post('/actividad_vehiculos', [ActividadVehiculoController::class, 'store']);
+    Route::get('/actividad_vehiculos/{usuario_id}/poas', [ActividadVehiculoController::class, 'getActividadesPoa']);
+    Route::get('actividad_vehiculos_poa', [ActividadVehiculoController::class, 'getActividadesPoa']);
 
 });
     //ACTIVIDAD VEHICULO
@@ -124,6 +127,7 @@ Route::apiResource('municipios', MunicipioController::class);
 
 //POAS
 //Route::apiResource('poas', PoaController::class);
+Route::apiResource('poas', PoaController::class);
 Route::get('unidades/{unidad_id}/areas', [UnidadController::class, 'getAreasByUnidad']);
 Route::get('/poas/{codigo_poa}/operaciones', [PoaController::class, 'getOperacionesByCodigo']);    
 Route::get('/poas/{codigo_poa}/operaciones', [PoaController::class, 'getOperaciones']);
@@ -136,5 +140,8 @@ Route::post('/operaciones', [OperacionController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function() {
     // Ruta para obtener los POAs filtrados por el área o unidad del usuario autenticado
     Route::get('/poas', [PoaController::class, 'getPoas']);
-});
+    Route::get('poas/unidad/{unidad_id}', [PoaController::class, 'getPoasByUnidad']);
 
+});
+Route::apiResource('actividad_vehiculos', ActividadVehiculoController::class);
+Route::get('actividad_vehiculos_poa', [ActividadVehiculoController::class, 'getActividadesPoa']);

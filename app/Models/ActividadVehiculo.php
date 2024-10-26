@@ -45,4 +45,10 @@ class ActividadVehiculo extends Model
     {
         return $this->belongsTo(Vehiculo::class);
     }
+    // Relación con Operacion a través de Poa
+    public function operacion()
+    {
+        return $this->hasOneThrough(Operacion::class, Poa::class, 'id', 'id', 'poa_id', 'operacion_id');
+    }
+
 }

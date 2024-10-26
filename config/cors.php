@@ -30,9 +30,10 @@ return [
     'max_age' => 0,
 
     'supports_credentials' => false, */
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'reporte-mensual-con-vehiculo/*'],
     'allowed_methods' => ['*'],
     'allowed_origins' => ['http://localhost:4200'],  // Reemplaza con el dominio de tu Angular
+    //'allowed_origins' => ['https://m8jfxbh1-4200.brs.devtunnels.ms'],  // Reemplaza con el dominio de tu Angular
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
     'max_age' => 0,
