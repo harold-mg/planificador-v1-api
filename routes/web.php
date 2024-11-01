@@ -19,4 +19,5 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 }); */
 //Route::get('/reporte-mensual/{mes}', [ActividadVehiculoController::class, 'generarReporteMensual'])->name('reporte.mensual');
-Route::get('/reporte-mensual-con-vehiculo/{mes}', [ReporteConVehiculo::class, 'generarReporteMensual'])->name('reporte.mensual');
+//Route::get('/reporte-mensual-con-vehiculo/{mes}', [ReporteConVehiculo::class, 'generarReporteMensual'])->name('reporte.mensual');
+Route::get('/reporte-mensual-con-vehiculo/{mes}/{year}', [ReporteConVehiculo::class, 'generarReporteMensual']);

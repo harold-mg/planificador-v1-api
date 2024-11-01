@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\V1\OperacionController;
 use App\Http\Controllers\Api\V1\PoaController;
 use App\Http\Controllers\Api\V1\UnidadController;
 use App\Http\Controllers\Api\V1\VehiculoController;
+use App\Http\Controllers\ApiExcel\ExcelDataController;
+//use App\Http\Controllers\ExcelDataController as ControllersExcelDataController;
 use App\Models\ActividadVehiculo;
 use App\Models\Municipio;
 use Illuminate\Http\Request;
@@ -145,3 +147,5 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 Route::apiResource('actividad_vehiculos', ActividadVehiculoController::class);
 Route::get('actividad_vehiculos_poa', [ActividadVehiculoController::class, 'getActividadesPoa']);
+//API MAPA ENFERMEDADES
+Route::get('/datos-excel', [ExcelDataController::class, 'obtenerDatosDesdeExcel']);

@@ -13,13 +13,18 @@ class ReporteConVehiculo extends Controller
     {
         $this->middleware('auth:sanctum');  // Asegúrate de que este middleware esté aplicado
     }
-    public function generarReporteMensual(Request $request, $mes)
+    public function generarReporteMensual(Request $request, $mes, $year)
     {
         // Obtener el año actual
         $year = date('Y');
     
         // Consultar las actividades aprobadas en el mes y año seleccionados
-        $actividades = ActividadVehiculo::with(['poa.operaciones', 'usuario.area', 'usuario.unidad', 'centroSalud.municipio'])
+        /* $actividades = ActividadVehiculo::with(['poa.operaciones', 'usuario.area', 'usuario.unidad', 'centroSalud.municipio'])
+            ->where('estado_aprobacion', 'aprobado')
+            ->whereMonth('fecha_inicio', $mes)
+            ->whereYear('fecha_inicio', $year)
+            ->get(); */
+            $actividades = ActividadVehiculo::with(['poa.operaciones', 'usuario.area', 'usuario.unidad', 'centroSalud.municipio'])
             ->where('estado_aprobacion', 'aprobado')
             ->whereMonth('fecha_inicio', $mes)
             ->whereYear('fecha_inicio', $year)
