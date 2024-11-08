@@ -20,6 +20,7 @@ class ActividadVehiculo extends Model
         'detalles_adicionales',
         'estado_aprobacion',
         'nivel_aprobacion',
+        'observaciones',
         'usuario_id',
         'vehiculo_id',
     ];

@@ -34,6 +34,7 @@ class ActividadVehiculoController extends Controller
             'centro_salud_id' => 'required|exists:centros_salud,id',
             'tecnico_a_cargo' => 'required|string',
             'detalles_adicionales' => 'nullable|string',
+            'observaciones' => 'nullable|string',
             //'estado_aprobacion' => 'required|string',
             'usuario_id' => 'required|exists:usuarios,id', // Esta línea se puede omitir
         ]);
@@ -61,6 +62,8 @@ class ActividadVehiculoController extends Controller
             'detalles_adicionales' => $validated['detalles_adicionales'],
             //'usuario_id' => auth()->id(), // ID del usuario autenticado
             'estado_aprobacion' => 'pendiente', // Estado inicial de la actividad
+            //'observaciones' => $validated['observaciones'],
+            'observaciones' => $validated['observaciones'] ?? null,
             'nivel_aprobacion' => $nivel_aprobacion,
             //'nivel_aprobacion' => 'unidad',
             //'usuario_id' => $request->usuario_id,
@@ -208,19 +211,24 @@ class ActividadVehiculoController extends Controller
     }
 
     // Método para rechazar actividad
-    public function rechazar($id)
+    public function rechazar($id, Request $request)
     {
+        /* $request->validate([
+            'observaciones' => 'required|string|max:255',
+        ]); */
         $actividad = ActividadVehiculo::findOrFail($id);
         
         // Verificar que el usuario tenga el rol correcto para rechazar
         if (auth()->user()->rol !== 'responsable_unidad' && auth()->user()->rol !== 'planificador') {
             return response()->json(['error' => 'No tienes permisos para rechazar esta actividad'], 403);
         }
-    
+        /* $actividad->estado_aprobacion = 'rechazado';  
+        $actividad->observaciones = $request->observaciones; */
         // Si el usuario es el planificador, devolver la actividad a la unidad con estado pendiente
-        if (auth()->user()->rol === 'planificador') {
-            $actividad->estado_aprobacion = 'pendiente';  // Volver el estado a pendiente
-            $actividad->nivel_aprobacion = 'unidad';      // Devolver el nivel a unidad
+         if (auth()->user()->rol === 'planificador') {
+            $actividad->estado_aprobacion = 'rechazado';  // Volver el estado a pendiente
+            $actividad->observaciones = $request->observaciones;
+            //$actividad->nivel_aprobacion = 'unidad';      // Devolver el nivel a unidad
             $actividad->save();
     
             return response()->json(['message' => 'Actividad rechazada por el planificador y devuelta a la unidad']);
@@ -230,47 +238,13 @@ class ActividadVehiculoController extends Controller
         if (auth()->user()->rol === 'responsable_unidad') {
             $actividad->estado_aprobacion = 'rechazado';  // Cambiar el estado a rechazado
             $actividad->nivel_aprobacion = 'unidad';      // Mantener el nivel en unidad
+            $actividad->observacion = $request->observacion;
             $actividad->save();
     
             return response()->json(['message' => 'Actividad rechazada por la unidad']);
-        }
+        } 
+        //$actividad->save();
     
         return response()->json(['message' => 'No se puede rechazar esta actividad'], 400);
-    }
-
-   /*  public function generarReporteMensual(Request $request, $mes)
-    {
-        // Obtener el año actual
-        $year = date('Y');
-    
-        // Consultar las actividades aprobadas en el mes y año seleccionados
-        $actividades = ActividadVehiculo::with(['poa.operaciones', 'usuario.area', 'usuario.unidad', 'centroSalud.municipio'])
-            ->where('estado_aprobacion', 'aprobado')
-            ->whereMonth('fecha_inicio', $mes)
-            ->whereYear('fecha_inicio', $year)
-            ->get();
-        // Formatear las fechas en el formato día-mes-año
-        $actividades->map(function ($actividad) {
-            $actividad->fecha_inicio = \Carbon\Carbon::parse($actividad->fecha_inicio)->format('d-m-Y');
-            $actividad->fecha_fin = \Carbon\Carbon::parse($actividad->fecha_fin)->format('d-m-Y');
-            // Si necesitas formatear más fechas, hazlo aquí
-            return $actividad;
-        });
-        // Preparar los datos para el PDF
-        $data = [
-            'mes' => $mes,
-            'year' => $year,
-            'actividades' => $actividades
-        ];
-    
-        // Generar el PDF con DomPDF
-        //$pdf = PDF::loadView('reports.reporte_actividad_conv', $data);
-        $pdf = PDF::loadView('reports.reporte_actividad_conv', $data)
-               ->setPaper('a4', 'landscape'); // Establecer tamaño A4 y orientación horizontal
-        // Retornar el PDF
-        //return $pdf->download('reporte_actividades_'.$mes.'_'.$year.'.pdf');
-        return $pdf->stream('reporte_mensual.pdf');
-    } */
-
-    
+    }  
 }

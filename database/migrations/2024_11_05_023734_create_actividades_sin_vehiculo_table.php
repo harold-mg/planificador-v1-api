@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('actividades_evento', function (Blueprint $table) {
+        Schema::create('actividades_sin_vehiculo', function (Blueprint $table) {
             $table->id();
-            $table->enum('tipo_actividad', ['auditorio', 'virtual', 'externo']);
-            $table->string('nombre_actividad');
+            $table->foreignId('poa_id')->constrained('poas')->onDelete('cascade');
+            $table->text('detalle_operacion')->nullable();
             $table->text('resultados_esperados');
-            $table->date('fecha');
-            $table->time('hora_inicio');
-            $table->time('hora_fin');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->foreignId('centro_salud_id')->constrained('centros_salud')->onDelete('cascade');
             $table->string('tecnico_a_cargo');
-            $table->text('participantes')->nullable();
-            $table->string('lugar')->nullable(); // Solo para actividades externas
+            $table->text('detalles_adicionales')->nullable();
             $table->enum('estado_aprobacion', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente');
+            $table->text('observaciones')->nullable();
+            $table->enum('nivel_aprobacion', ['unidad', 'planificador'])->default('unidad');
             $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
             $table->timestamps();
         });
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actividad_eventos');
+        Schema::dropIfExists('actividades_sin_vehiculo');
     }
 };

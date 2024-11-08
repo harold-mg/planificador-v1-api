@@ -19,11 +19,6 @@ class ReporteConVehiculo extends Controller
         $year = date('Y');
     
         // Consultar las actividades aprobadas en el mes y año seleccionados
-        /* $actividades = ActividadVehiculo::with(['poa.operaciones', 'usuario.area', 'usuario.unidad', 'centroSalud.municipio'])
-            ->where('estado_aprobacion', 'aprobado')
-            ->whereMonth('fecha_inicio', $mes)
-            ->whereYear('fecha_inicio', $year)
-            ->get(); */
             $actividades = ActividadVehiculo::with(['poa.operaciones', 'usuario.area', 'usuario.unidad', 'centroSalud.municipio'])
             ->where('estado_aprobacion', 'aprobado')
             ->whereMonth('fecha_inicio', $mes)
@@ -33,7 +28,6 @@ class ReporteConVehiculo extends Controller
         $actividades->map(function ($actividad) {
             $actividad->fecha_inicio = \Carbon\Carbon::parse($actividad->fecha_inicio)->format('d-m-Y');
             $actividad->fecha_fin = \Carbon\Carbon::parse($actividad->fecha_fin)->format('d-m-Y');
-            // Si necesitas formatear más fechas, hazlo aquí
             return $actividad;
         });
         // Preparar los datos para el PDF
@@ -44,7 +38,6 @@ class ReporteConVehiculo extends Controller
         ];
     
         // Generar el PDF con DomPDF
-        //$pdf = PDF::loadView('reports.reporte_actividad_conv', $data);
         $pdf = PDF::loadView('reports.reporte_actividad_conv', $data)
                ->setPaper('a4', 'landscape'); // Establecer tamaño A4 y orientación horizontal
         // Retornar el PDF

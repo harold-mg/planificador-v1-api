@@ -24,12 +24,12 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
-
-    Route::post('/actividad_vehiculo', [ActividadVehiculoController::class, 'store']);
+    Route::apiResource('actividad_vehiculos', ActividadVehiculoController::class);
+    /* Route::post('/actividad_vehiculo', [ActividadVehiculoController::class, 'store']);
     Route::get('/actividad_vehiculo', [ActividadVehiculoController::class, 'index']);
     Route::get('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'show']);
     Route::put('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'update']);
-    Route::delete('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'destroy']);
+    Route::delete('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'destroy']); */
 
     // Ruta para aprobar actividad por el responsable de unidad
     Route::post('/actividad_vehiculos/{id}/aprobar-unidad', [ActividadVehiculoController::class, 'aprobarPorUnidad']);
@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
 
     // Ruta para rechazar actividad
-    Route::post('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
+    Route::put('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
     // Solo los planificadores pueden acceder a estas rutas
     Route::middleware('check.planificador')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
@@ -82,7 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('vehiculos/disponibles', [VehiculoController::class, 'disponibles']);
         
         //ACTIVIDAD VEHICULO
-        Route::post('/actividad_vehiculo', [ActividadVehiculoController::class, 'store']);
+        Route::post('/actividad_vehiculos', [ActividadVehiculoController::class, 'store']);
         Route::get('/actividad_vehiculos', [ActividadVehiculoController::class, 'index']);
         Route::get('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'show']);
         Route::put('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'update']);

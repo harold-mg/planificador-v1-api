@@ -11,21 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('actividades_vehiculo', function (Blueprint $table) {
+        Schema::create('actividades_virtual', function (Blueprint $table) {
             $table->id();
             $table->foreignId('poa_id')->constrained('poas')->onDelete('cascade');
             $table->text('detalle_operacion')->nullable();
+            $table->string('tipo_actividad');
             $table->text('resultados_esperados');
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            $table->foreignId('centro_salud_id')->constrained('centros_salud')->onDelete('cascade');
+            $table->date('fecha');
+            $table->time('hora_inicio');
+            $table->time('hora_fin');
+            $table->string('lugar');
             $table->string('tecnico_a_cargo');
-            $table->text('detalles_adicionales')->nullable();
+            $table->integer('participantes');
             $table->enum('estado_aprobacion', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente');
             $table->text('observaciones')->nullable();
             $table->enum('nivel_aprobacion', ['unidad', 'planificador'])->default('unidad');
             $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
-            $table->foreignId('vehiculo_id')->nullable()->constrained('vehiculos')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -35,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actividades_vehiculo');
+        Schema::dropIfExists('actividades_virtual');
     }
 };
