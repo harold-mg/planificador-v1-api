@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ActividadAuditorioController;
+use App\Http\Controllers\Api\V1\ActividadSinVehiculoController;
 use App\Http\Controllers\Api\V1\ActividadVehiculoController;
 use App\Http\Controllers\Api\V1\AreaController;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 //Route::get('/user', [AuthController::class, 'me']);
 
+Route::get('/usuarios', [AuthController::class, 'getAllUsers']);
 Route::post('/login', [AuthController::class, 'login']);
 // Rutas protegidas por autenticación Sanctum
 Route::middleware('auth:sanctum')->group(function () {
@@ -33,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Ruta para aprobar actividad por el responsable de unidad
     Route::post('/actividad_vehiculos/{id}/aprobar-unidad', [ActividadVehiculoController::class, 'aprobarPorUnidad']);
+    Route::put('actividad_vehiculos/{id}/estado', [ActividadVehiculoController::class, 'cambiarEstadoActividad']);
 
     // Ruta para aprobar actividad por el planificador
     Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
@@ -41,7 +45,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
     // Solo los planificadores pueden acceder a estas rutas
     Route::middleware('check.planificador')->group(function () {
+        // Asegúrate de tener esta ruta en routes/api.php
+        Route::get('/usuarios/{id}', [AuthController::class, 'getUsuario']);
+        Route::put('/usuarios/{id}', [AuthController::class, 'updateUsuario']);
+        //Route::apiResource('/user', AuthController::class);
         Route::post('/register', [AuthController::class, 'register']);
+        Route::get('/usuarios', [AuthController::class, 'getAllUsers']);
         //UNIDADES
         Route::apiResource('/unidades', UnidadController::class);
         Route::post('/unidades', [UnidadController::class, 'store']);
@@ -87,21 +96,47 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'show']);
         Route::put('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'update']);
         Route::delete('/actividad_vehiculo/{id}', [ActividadVehiculoController::class, 'destroy']);
+        //ACTIVIDAD SIN VEHICULO
+        Route::apiResource('actividad_sin_vehiculos', ActividadSinVehiculoController::class);
+        Route::get('actividad_sin_vehiculos_poa', [ActividadSinVehiculoController::class, 'getActividadesPoa']);
+        Route::post('/actividad_sin_vehiculos/{id}/aprobar-planificador', [ActividadSinVehiculoController::class, 'aprobarPorPlanificador']);
+        Route::post('/actividad_sin_vehiculos/{id}/aprobar-unidad', [ActividadSinVehiculoController::class, 'aprobarPorUnidad']);
+        Route::put('/actividad_sin_vehiculos/{id}/rechazar', [ActividadSinVehiculoController::class, 'rechazar']);
+        Route::put('actividad_sin_vehiculos/{id}/estado', [ActividadSinVehiculoController::class, 'cambiarEstadoActividad']);
+        //ACTIVIDAD AUDITORIO
+        Route::apiResource('actividad_auditorios', ActividadAuditorioController::class);
+        Route::get('/actividad_auditorios_poa', [ActividadAuditorioController::class, 'getActividadesPoa']);
+        Route::post('/actividad_auditorios/{id}/aprobar-planificador', [ActividadAuditorioController::class, 'aprobarPorPlanificador']);
+        Route::post('/actividad_auditorios/{id}/aprobar-unidad', [ActividadAuditorioController::class, 'aprobarPorUnidad']);
+        Route::put('/actividad_auditorios/{id}/rechazar', [ActividadAuditorioController::class, 'rechazar']);
+        Route::put('/actividad_auditorios/{id}/estado', [ActividadAuditorioController::class, 'cambiarEstadoActividad']);
         // Ruta para aprobar actividad por el planificador
         Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
         Route::post('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
+
     });
     
     //ACTIVIDAD VEHICULO
     // Actividades de vehículos - CRUD básico
     Route::apiResource('actividad_vehiculos', ActividadVehiculoController::class);
-    Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
+    //Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
     Route::post('/actividad_vehiculos/{id}/aprobar-unidad', [ActividadVehiculoController::class, 'aprobarPorUnidad']);
     Route::post('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
     Route::post('/actividad_vehiculos', [ActividadVehiculoController::class, 'store']);
     Route::get('/actividad_vehiculos/{usuario_id}/poas', [ActividadVehiculoController::class, 'getActividadesPoa']);
     Route::get('actividad_vehiculos_poa', [ActividadVehiculoController::class, 'getActividadesPoa']);
-
+    //ACTIVIDAD SIN VEHICULO
+    Route::apiResource('actividad_sin_vehiculos', ActividadSinVehiculoController::class);
+    Route::get('actividad_sin_vehiculos_poa', [ActividadSinVehiculoController::class, 'getActividadesPoa']);
+    Route::post('/actividad_sin_vehiculos/{id}/aprobar-unidad', [ActividadSinVehiculoController::class, 'aprobarPorUnidad']);
+    Route::put('/actividad_sin_vehiculos/{id}/rechazar', [ActividadSinVehiculoController::class, 'rechazar']);
+    Route::put('actividad_sin_vehiculos/{id}/estado', [ActividadSinVehiculoController::class, 'cambiarEstadoActividad']);
+    //ACTIVIDAD AUDITORIO
+    Route::apiResource('actividad_auditorios', ActividadAuditorioController::class);
+    Route::post('/actividad_auditorios/{id}/aprobar-unidad', [ActividadAuditorioController::class, 'aprobarPorUnidad']);
+    Route::get('/actividad_auditorios_poa', [ActividadAuditorioController::class, 'getActividadesPoa']);
+    Route::put('/actividad_auditorios/{id}/rechazar', [ActividadAuditorioController::class, 'rechazar']);
+    Route::put('/actividad_auditorios/{id}/estado', [ActividadAuditorioController::class, 'cambiarEstadoActividad']);
 });
     //ACTIVIDAD VEHICULO
     //Route::middleware('auth:api')->post('/actividad_vehiculos', [ActividadVehiculoController::class, 'store']);
@@ -149,3 +184,4 @@ Route::apiResource('actividad_vehiculos', ActividadVehiculoController::class);
 Route::get('actividad_vehiculos_poa', [ActividadVehiculoController::class, 'getActividadesPoa']);
 //API MAPA ENFERMEDADES
 Route::get('/datos-excel', [ExcelDataController::class, 'obtenerDatosDesdeExcel']);
+Route::apiResource('centros_salud', CentroSaludController::class);

@@ -29,26 +29,34 @@ class CentroSaludController extends Controller
         return response()->json($centroSalud, 201);
     }
 
-    public function show(CentroSalud $centroSalud)
+    public function show($id)
     {
-        // Mostrar un centro de salud específico con su relación de municipio
-        return $centroSalud->load('municipio');
+        // Forzar la carga explícita de la relación
+        $centroSalud = CentroSalud::with('municipio')->findOrFail($id);
+        return response()->json($centroSalud);
     }
 
-    public function update(Request $request, CentroSalud $centroSalud)
+    public function update(Request $request, $id)
     {
-        // Validar los datos para la actualización
+        // Buscar el centro de salud por id
+        $centroSalud = CentroSalud::findOrFail($id);
+    
+        // Validación de los datos
         $request->validate([
             'nombre' => 'required|string|max:255',
             'tipo' => 'required|string|max:255',
             'municipio_id' => 'required|exists:municipios,id',
         ]);
-
+    
         // Actualizar el centro de salud
         $centroSalud->update($request->all());
-
+    
+        // Retornar la respuesta
         return response()->json($centroSalud, 200);
     }
+    
+    
+    
 
     public function destroy(CentroSalud $centroSalud)
     {

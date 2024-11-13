@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-    <h2>Reporte de Actividades Aprobadas con Vehículo - Mes: {{ $mes }} / {{ $year }}</h2>
+    <h2>Reporte de Actividades Aprobadas Sin Vehículo- Mes: {{ $mes }} / {{ $year }}</h2>
 
     <table>
         <thead>

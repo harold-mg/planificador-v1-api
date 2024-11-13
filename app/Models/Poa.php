@@ -20,23 +20,31 @@ class Poa extends Model
     {
         return $this->hasMany(Operacion::class);
     }
-    // Relación con ActividadesConVehiculo
-    public function actividadesConVehiculo()
-    {
-        return $this->hasMany(ActividadVehiculo::class);
-    }
-
+    
     // Relación con Area
     public function area()
     {
         return $this->belongsTo(Area::class);
     }
-
+    
     public function unidad()
     {
         return $this->belongsTo(Unidad::class);
     }
-
+    
+    // Relación con ActividadesConVehiculo
+    public function actividadesConVehiculo()
+    {
+        return $this->hasMany(ActividadVehiculo::class);
+    }
+    public function actividadesSinVehiculo()
+    {
+        return $this->hasMany(ActividadVehiculo::class);
+    }
+    public function actividadesAuditorio()
+    {
+        return $this->hasMany(ActividadAuditorio::class);
+    }
     // Si "operacion" es una columna de texto o JSON que guarda las operaciones
 /*     public function getOperacionAttribute($value)
     {

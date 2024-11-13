@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Area;
+use App\Models\Unidad;
 
 class AuthController extends Controller
 {
@@ -73,13 +75,86 @@ class AuthController extends Controller
     
 
     // Método para obtener el usuario autenticado
-    public function me()
+    /* public function me()
     {
         return response()->json(Auth::user());
-    }
+    } */
     public function user()
     {
         return response()->json(auth()->user());
     }
+    
+    // En AuthController o UsuarioController
+    public function getAllUsers()
+    {
+        // Obtener todos los usuarios de la base de datos con sus relaciones
+        $usuarios = Usuario::with(['area', 'unidad'])->get();
+    
+        // Mapear los usuarios para agregar la información de área o unidad
+        $usuariosConRelacion = $usuarios->map(function ($usuario) {
+            $lugar = null;
+    
+            // Determina si el usuario tiene un área asignada
+            if ($usuario->area) {
+                $lugar = $usuario->area->nombre;  // Asumiendo que 'nombre' es el campo en la tabla 'areas'
+            } elseif ($usuario->unidad) {
+                $lugar = $usuario->unidad->nombre; // Asumiendo que 'nombre' es el campo en la tabla 'unidades'
+            }
+    
+            // Agregar el campo 'lugar' al usuario
+            $usuario->lugar = $lugar;
+    
+            return $usuario;
+        });
+    
+        // Retornar los usuarios con la nueva propiedad 'lugar'
+        return response()->json($usuariosConRelacion);
+    }
+    // Método para actualizar un usuario
+    public function updateUsuario(Request $request, $id)
+    {
+        // Validar los datos que llegan en la solicitud
+        $validatedData = $request->validate([
+            'nombre' => 'nullable|string|max:255',
+            'apellido' => 'nullable|string|max:255',
+            'cedula_identidad' => 'nullable|string|max:255|unique:usuarios,cedula_identidad,' . $id,
+            'nombre_usuario' => 'nullable|string|max:255|unique:usuarios,nombre_usuario,' . $id,
+            'password' => 'nullable|string|min:6|confirmed',  // Si quieres permitir la actualización de la contraseña
+            'rol' => 'nullable|string|in:responsable_area,responsable_unidad,planificador',
+            'area_id' => 'nullable|exists:areas,id',
+            'unidad_id' => 'nullable|exists:unidades,id',
+        ]);
+
+        // Buscar el usuario por su ID
+        $usuario = Usuario::find($id);
+
+        if (!$usuario) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        // Actualizar solo los campos que fueron enviados
+        $usuario->update($validatedData);
+
+        // Si se actualiza la contraseña, también debes actualizarla
+        if ($request->has('password')) {
+            $usuario->password = Hash::make($request->input('password'));
+            $usuario->save();
+        }
+
+        return response()->json($usuario);
+    }
+    // Método para obtener un usuario por su ID
+    public function getUsuario($id)
+    {
+        // Buscar el usuario por su ID
+        $usuario = Usuario::find($id);
+
+        if (!$usuario) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        return response()->json($usuario);
+    }
+
 }
 

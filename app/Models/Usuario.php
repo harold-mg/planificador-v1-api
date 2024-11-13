@@ -23,11 +23,6 @@ class Usuario extends Authenticatable
         'unidad_id'
     ];
     
-    // Relación con ActividadesConVehiculo
-    public function actividadeVehiculo()
-    {
-        return $this->hasMany(ActividadVehiculo::class);
-    }
     // Relación con Area
     public function area()
     {
@@ -49,6 +44,19 @@ class Usuario extends Authenticatable
         return null; // Si no tiene ni área ni unidad
     }
 
+    // Relación con ActividadesConVehiculo
+    public function actividadesConVehiculo()
+    {
+        return $this->hasMany(ActividadVehiculo::class);
+    }
+    public function actividadesSinVehiculo()
+    {
+        return $this->hasMany(ActividadVehiculo::class);
+    }
+    public function actividadesAuditorio()
+    {
+        return $this->hasMany(ActividadAuditorio::class);
+    }
     /* // Acceso a Unidad a través de Area
     public function unidad()
     {

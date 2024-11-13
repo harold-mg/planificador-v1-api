@@ -38,15 +38,15 @@ class OperacionController extends Controller
 
     public function update(Request $request, $id)
     {
-        $operacion = Operacion::findOrFail($id);
+        $operacion = Operacion::findOrFail($id); // Buscar la operación por ID
 
-        // Validar la solicitud
+        // Validar los datos
         $request->validate([
             'descripcion' => 'sometimes|required|string',
+            'poa_id' => 'sometimes|required|exists:poas,id',
         ]);
 
-        // Actualizar operación
-        $operacion->update($request->all());
+        $operacion->update($request->all()); // Actualizar la operación
         return response()->json($operacion);
     }
 
