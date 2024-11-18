@@ -278,7 +278,18 @@ class ActividadVehiculoController extends Controller
         // Responder con la actividad actualizada
         return response()->json(['success' => true, 'actividad' => $actividad]);
     }
+    public function getActividadesPorUsuario($id)
+    {
+        // Cargar la relación 'poa' junto con sus 'operaciones' en la consulta
+        $actividades = ActividadVehiculo::with(['poa', 'poa.operaciones'])  // Carga la relación 'poa' y las 'operaciones' de 'poa'
+                                    ->where('usuario_id', $id)
+                                    ->where('estado_aprobacion', '!=', 'pendiente')  // Filtra solo las actividades aprobadas o rechazadas
+                                    ->get();
     
+        // Responder con las actividades en formato JSON
+        return response()->json($actividades);
+    }
+  
 
     
 }

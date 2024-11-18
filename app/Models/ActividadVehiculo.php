@@ -28,7 +28,7 @@ class ActividadVehiculo extends Model
     // Relación con Poa
     public function poa()
     {
-        return $this->belongsTo(Poa::class);
+        return $this->belongsTo(Poa::class, 'poa_id');
     }
 
     // Relación con CentroSalud

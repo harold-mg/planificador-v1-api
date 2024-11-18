@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\V1\PoaController;
 use App\Http\Controllers\Api\V1\UnidadController;
 use App\Http\Controllers\Api\V1\VehiculoController;
 use App\Http\Controllers\ApiExcel\ExcelDataController;
+use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\NotificacionesController;
 //use App\Http\Controllers\ExcelDataController as ControllersExcelDataController;
 use App\Models\ActividadVehiculo;
 use App\Models\Municipio;
@@ -114,6 +116,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
         Route::post('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
 
+        //NOTIFICACIONES
+        Route::get('/notificaciones', [NotificacionController::class, 'getUserNotifications']);
+        Route::post('/notificaciones/marcar-leida/{id}', [NotificacionController::class, 'marcarComoLeida']);
+        Route::post('/notificaciones/no-leidas', [NotificacionController::class, 'getNotificacionesNoLeidas']);
+        Route::get('actividad_sin_vehiculos/actividades-sin-vehiculo/usuario/{id}', [ActividadSinVehiculoController::class, 'getActividadesPorUsuario']);
+
     });
     
     //ACTIVIDAD VEHICULO
@@ -137,6 +145,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/actividad_auditorios_poa', [ActividadAuditorioController::class, 'getActividadesPoa']);
     Route::put('/actividad_auditorios/{id}/rechazar', [ActividadAuditorioController::class, 'rechazar']);
     Route::put('/actividad_auditorios/{id}/estado', [ActividadAuditorioController::class, 'cambiarEstadoActividad']);
+    
+    //NOTIFICACIONES
+    Route::get('/notificaciones', [NotificacionController::class, 'getUserNotifications']);
+    Route::post('/notificaciones/marcar-leida/{id}', [NotificacionController::class, 'marcarComoLeida']);
+    Route::get('/notificaciones/no-leidas', [NotificacionController::class, 'getNotificacionesNoLeidas']);
+    Route::get('actividad_sin_vehiculos/actividades-sin-vehiculo/usuario/{id}', [ActividadSinVehiculoController::class, 'getActividadesPorUsuario']);
+
+
+
 });
     //ACTIVIDAD VEHICULO
     //Route::middleware('auth:api')->post('/actividad_vehiculos', [ActividadVehiculoController::class, 'store']);
@@ -173,7 +190,8 @@ Route::get('/poas/{codigo_poa}/operaciones', [PoaController::class, 'getOperacio
 //OPERACIONES
 Route::apiResource('operaciones', OperacionController::class);
 Route::post('/operaciones', [OperacionController::class, 'store']);
-
+Route::get('/unidades', [UnidadController::class, 'index']);
+Route::get('/areas', [AreaController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function() {
     // Ruta para obtener los POAs filtrados por el área o unidad del usuario autenticado
     Route::get('/poas', [PoaController::class, 'getPoas']);
@@ -185,3 +203,7 @@ Route::get('actividad_vehiculos_poa', [ActividadVehiculoController::class, 'getA
 //API MAPA ENFERMEDADES
 Route::get('/datos-excel', [ExcelDataController::class, 'obtenerDatosDesdeExcel']);
 Route::apiResource('centros_salud', CentroSaludController::class);
+//NOTIFICACIONES
+Route::get('actividad_sin_vehiculos/actividades-sin-vehiculo/usuario/{id}', [ActividadSinVehiculoController::class, 'getActividadesPorUsuario']);
+Route::get('actividad_vehiculos/actividades-vehiculo/usuario/{id}', [ActividadVehiculoController::class, 'getActividadesPorUsuario']);
+
