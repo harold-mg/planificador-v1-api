@@ -30,7 +30,11 @@ return [
     'max_age' => 0,
 
     'supports_credentials' => false, */
-    'paths' => ['api/*','api/centros_salud/*', 'sanctum/csrf-cookie', 'reporte-mensual-con-vehiculo/*', 'reporte-mensual-sin-vehiculo/*'],
+    'paths' => ['api/*','api/centros_salud/*', 'sanctum/csrf-cookie', 
+        'reporte-mensual-con-vehiculo/*', 
+        'reporte-mensual-sin-vehiculo/*', 
+        'reporte-mensual-auditorio/*',
+        'reporte-mensual-virtual/*'],
     'allowed_methods' => ['*'],
     'allowed_origins' => ['http://localhost:4200'],  // Reemplaza con el dominio de tu Angular
     //'allowed_origins' => ['https://m8jfxbh1-4200.brs.devtunnels.ms'],  // Reemplaza con el dominio de tu Angular

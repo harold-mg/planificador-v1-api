@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ActividadAuditorioController;
+use App\Http\Controllers\Api\V1\ActividadExternaController;
 use App\Http\Controllers\Api\V1\ActividadSinVehiculoController;
 use App\Http\Controllers\Api\V1\ActividadVehiculoController;
+use App\Http\Controllers\Api\V1\ActividadVirtualController;
 use App\Http\Controllers\Api\V1\AreaController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CentroSaludController;
@@ -112,6 +114,21 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/actividad_auditorios/{id}/aprobar-unidad', [ActividadAuditorioController::class, 'aprobarPorUnidad']);
         Route::put('/actividad_auditorios/{id}/rechazar', [ActividadAuditorioController::class, 'rechazar']);
         Route::put('/actividad_auditorios/{id}/estado', [ActividadAuditorioController::class, 'cambiarEstadoActividad']);
+        //ACTIVIDAD VIRTUAL
+        Route::apiResource('actividad_virtuales', ActividadVirtualController::class);
+        Route::post('/actividad_virtuales/{id}/aprobar-unidad', [ActividadVirtualController::class, 'aprobarPorUnidad']);
+        Route::post('/actividad_virtuales/{id}/aprobar-planificador', [ActividadVirtualController::class, 'aprobarPorPlanificador']);
+        Route::get('/actividad_virtuales_poa', [ActividadVirtualController::class, 'getActividadesPoa']);
+        Route::put('/actividad_virtuales/{id}/rechazar', [ActividadVirtualController::class, 'rechazar']);
+        Route::put('/actividad_virtuales/{id}/estado', [ActividadVirtualController::class, 'cambiarEstadoActividad']);
+        //ACTIVIDAD EXTERNA
+        Route::apiResource('actividad_externas', ActividadExternaController::class);
+        Route::post('/actividad_externas/{id}/aprobar-unidad', [ActividadExternaController::class, 'aprobarPorUnidad']);
+        Route::post('/actividad_externas/{id}/aprobar-planificador', [ActividadExternaController::class, 'aprobarPorPlanificador']);
+        Route::get('/actividad_externas_poa', [ActividadExternaController::class, 'getActividadesPoa']);
+        Route::put('/actividad_externas/{id}/rechazar', [ActividadExternaController::class, 'rechazar']);
+        Route::put('/actividad_externas/{id}/estado', [ActividadExternaController::class, 'cambiarEstadoActividad']);
+
         // Ruta para aprobar actividad por el planificador
         Route::post('/actividad_vehiculos/{id}/aprobar-planificador', [ActividadVehiculoController::class, 'aprobarPorPlanificador']);
         Route::post('/actividad_vehiculos/{id}/rechazar', [ActividadVehiculoController::class, 'rechazar']);
@@ -146,12 +163,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/actividad_auditorios/{id}/rechazar', [ActividadAuditorioController::class, 'rechazar']);
     Route::put('/actividad_auditorios/{id}/estado', [ActividadAuditorioController::class, 'cambiarEstadoActividad']);
     
+    //ACTIVIDAD VIRTUAL
+    Route::apiResource('actividad_virtuales', ActividadVirtualController::class);
+    Route::post('/actividad_virtuales/{id}/aprobar-unidad', [ActividadVirtualController::class, 'aprobarPorUnidad']);
+    Route::get('/actividad_virtuales_poa', [ActividadVirtualController::class, 'getActividadesPoa']);
+    Route::put('/actividad_virtuales/{id}/rechazar', [ActividadVirtualController::class, 'rechazar']);
+    Route::put('/actividad_virtuales/{id}/estado', [ActividadVirtualController::class, 'cambiarEstadoActividad']);
+    //ACTIVIDAD EXTERNA
+    Route::apiResource('actividad_externas', ActividadExternaController::class);
+    Route::post('/actividad_externas/{id}/aprobar-unidad', [ActividadExternaController::class, 'aprobarPorUnidad']);
+    Route::get('/actividad_externas_poa', [ActividadExternaController::class, 'getActividadesPoa']);
+    Route::put('/actividad_externas/{id}/rechazar', [ActividadExternaController::class, 'rechazar']);
+    Route::put('/actividad_externas/{id}/estado', [ActividadExternaController::class, 'cambiarEstadoActividad']);
     //NOTIFICACIONES
-    Route::get('/notificaciones', [NotificacionController::class, 'getUserNotifications']);
-    Route::post('/notificaciones/marcar-leida/{id}', [NotificacionController::class, 'marcarComoLeida']);
-    Route::get('/notificaciones/no-leidas', [NotificacionController::class, 'getNotificacionesNoLeidas']);
     Route::get('actividad_sin_vehiculos/actividades-sin-vehiculo/usuario/{id}', [ActividadSinVehiculoController::class, 'getActividadesPorUsuario']);
-
+    Route::get('actividad_vehiculos/actividades-vehiculo/usuario/{id}', [ActividadVehiculoController::class, 'getActividadesPorUsuario']);
+    Route::get('actividad_auditorios/actividades-vehiculo/usuario/{id}', [ActividadAuditorioController::class, 'getActividadesPorUsuario']);
+    Route::get('actividad_virtuales/actividades-vehiculo/usuario/{id}', [ActividadVirtualController::class, 'getActividadesPorUsuario']);
+    Route::get('actividad_externas/actividades-vehiculo/usuario/{id}', [ActividadExternaController::class, 'getActividadesPorUsuario']);
 
 
 });

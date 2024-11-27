@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\Api\V1\ActividadVehiculoController;
 use App\Http\Controllers\NotificacionesController;
+use App\Http\Controllers\reportes\ReporteAuditorio;
 use App\Http\Controllers\reportes\ReporteConVehiculo;
 use App\Http\Controllers\reportes\ReporteSinVehiculo;
-
+use App\Http\Controllers\reportes\ReporteVirtual;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,4 +26,6 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/reporte-mensual-con-vehiculo/{mes}', [ReporteConVehiculo::class, 'generarReporteMensual'])->name('reporte.mensual');
 Route::get('/reporte-mensual-con-vehiculo/{mes}/{year}', [ReporteConVehiculo::class, 'generarReporteMensual']);
 Route::get('/reporte-mensual-sin-vehiculo/{mes}/{year}', [ReporteSinVehiculo::class, 'generarReporteMensual']);
+Route::get('/reporte-mensual-auditorio/{mes}/{year}', [ReporteAuditorio::class, 'generarReporteMensual']);
+Route::get('/reporte-mensual-virtual/{mes}/{year}', [ReporteVirtual::class, 'generarReporteMensual']);
 
